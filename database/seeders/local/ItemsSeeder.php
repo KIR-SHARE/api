@@ -4,8 +4,9 @@ namespace Database\Seeders\local;
 
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
+use Illuminate\Http\File;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class ItemsSeeder extends Seeder
 {
@@ -45,6 +46,23 @@ class ItemsSeeder extends Seeder
                     'updated_at' => Carbon::now(),
                     'updated_by' => 1,
                 ],
-            ]);
+            ]
+        );
+
+        $file = new File(
+            database_path('seeders/local/fixtures/item_images/sample.png')
+        );
+
+        DB::table('items')->get()->each(function ($item) use ($file) {
+            $path = Storage::disk('public')->putFileAs(
+                "items/{$item->id}/images",
+                $file,
+                uniqid() . '.' . $file->getExtension()
+            );
+
+            DB::table('items')
+                ->where('id', $item->id)
+                ->update(['image' => $path]);
+        });
     }
 }
