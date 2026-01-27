@@ -4,8 +4,8 @@ namespace Database\Seeders\local;
 
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
+use Illuminate\Http\File;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
 class ItemsSeeder extends Seeder
@@ -49,17 +49,16 @@ class ItemsSeeder extends Seeder
             ]
         );
 
-        $sampleImagePath = database_path('seeders/local/fixtures/item_images/sample.png');
-        $extension = File::extension($sampleImagePath);
+        $file = new File(
+            database_path('seeders/local/fixtures/item_images/sample.png')
+        );
 
-        DB::table('items')->get()->each(function ($item) use ($sampleImagePath, $extension) {
-            $path = sprintf(
-                'items/%d/images/%s',
-                $item->id,
-                uniqid() . '.' . $extension
+        DB::table('items')->get()->each(function ($item) use ($file) {
+            $path = Storage::disk('public')->putFileAs(
+                "items/{$item->id}/images",
+                $file,
+                uniqid() . '.' . $file->getExtension()
             );
-
-            Storage::disk('public')->put($path, File::get($sampleImagePath));
 
             DB::table('items')
                 ->where('id', $item->id)
