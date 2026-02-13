@@ -25,9 +25,9 @@ class UsersSeeder extends Seeder
                     'remember_token' => null,
                     'is_admin' => true,
                     'created_at' => Carbon::now(),
-                    'created_by' => 1,
+                    'created_by' => null,
                     'updated_at' => Carbon::now(),
-                    'updated_by' => 1,
+                    'updated_by' => null,
                 ],
                 [
                     'email' => 'user@lh.sandbox',
@@ -36,9 +36,9 @@ class UsersSeeder extends Seeder
                     'remember_token' => null,
                     'is_admin' => false,
                     'created_at' => Carbon::now(),
-                    'created_by' => 1,
+                    'created_by' => null,
                     'updated_at' => Carbon::now(),
-                    'updated_by' => 1,
+                    'updated_by' => null,
                 ],
             ]);
     }
